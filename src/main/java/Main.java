@@ -7,8 +7,7 @@ public class Main {
 		while (true) {
 			simulator.tick();
 			window.updateDisplay();
-			Thread.sleep(1);
+			//Thread.sleep(1);
 		}
-
 	}
 }

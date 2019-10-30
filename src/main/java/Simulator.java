@@ -13,7 +13,6 @@ class Simulator {
 		this.width = width;
 		this.height = height;
 		data = new Material[width][height];
-		data[width / 2][height / 2] = Material.SAND;
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				data[i][j] = Material.EMPTY;
@@ -47,6 +46,9 @@ class Simulator {
 				case WATER:
 					doWater(x, y);
 					break;
+				case STEAM:
+					doSteam(x, y);
+					break;
 				case PLANT:
 					doPlant(x, y);
 					break;
@@ -61,6 +63,10 @@ class Simulator {
 					break;
 			}
 		}
+	}
+
+	private void doSteam(int x, int y) {
+		doFluid(x, y, -1);
 	}
 
 	private void doPlant(int x, int y) {
@@ -109,6 +115,9 @@ class Simulator {
 			data[x - 1][y + 1] = Material.FIRE;
 		}
 		data[x][y] = Material.EMPTY;
+		if (test(x, y - 1, Material.WATER)) {
+			data[x][y - 1] = Material.STEAM;
+		}
 	}
 
 	private boolean testWater(int x, int y) {
@@ -126,28 +135,50 @@ class Simulator {
 	}
 
 	private void doWater(int x, int y) {
-		if (isEmpty(x, y + 1)) {
-			move(x, y, x, y + 1);
+		doFluid(x, y, 1);
+	}
+
+	private void doFluid(int x, int y, int direction) {
+		if (isEmpty(x, y + direction)) {
+			move(x, y, x, y + direction);
 			return;
 		}
-		for (int i = x + 1; i < width; i++) {
-			if (!isEmpty(i, y)) {
-				break;
+		if (random.nextInt(100) < 50) {
+			if (!checkRight(x, y, direction)) {
+				checkLeft(x, y, direction);
 			}
-			if (isEmpty(i, y + 1)) {
-				move(x, y, i, y + 1);
-				return;
+		} else {
+			if (!checkLeft(x, y, direction)) {
+				checkRight(x, y, direction);
 			}
 		}
+
+	}
+
+	private boolean checkLeft(int x, int y, int yDirection) {
 		for (int i = x - 1; i >= 0; i--) {
 			if (!isEmpty(i, y)) {
-				break;
+				return false;
 			}
-			if (isEmpty(i, y + 1)) {
-				move(x, y, i, y + 1);
-				return;
+			if (isEmpty(i, y + yDirection)) {
+				move(x, y, i, y + yDirection);
+				return true;
 			}
 		}
+		return false;
+	}
+
+	private boolean checkRight(int x, int y, int yDirection) {
+		for (int i = x + 1; i < width; i++) {
+			if (!isEmpty(i, y)) {
+				return false;
+			}
+			if (isEmpty(i, y + yDirection)) {
+				move(x, y, i, y + yDirection);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void doSand(int x, int y) {

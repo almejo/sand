@@ -22,7 +22,7 @@ public class ToolsPanel extends JPanel implements ChangeListener {
 		);
 		JSlider slider = new JSlider();
 		slider.setMinimum(100);
-		slider.setMaximum(10000);
+		slider.setMaximum(50000);
 		slider.setValue(5000);
 		slider.setMajorTickSpacing(1000);
 		slider.setMinorTickSpacing(100);

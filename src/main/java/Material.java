@@ -4,6 +4,7 @@ public enum Material {
 	EMPTY(Color.BLACK),
 	SAND(Color.ORANGE),
 	WATER(Color.BLUE),
+	STEAM(new Color(200, 200,255)),
 	PLANT(Color.GREEN),
 	STONE(Color.GRAY),
 	FIRE(Color.RED),
